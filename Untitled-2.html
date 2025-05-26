@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý Thu ngân - Pizza Store</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fefcf8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #e74c3c;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    button, .btn-print {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 2px;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-pay {
+      background-color: #27ae60;
+    }
+
+    .btn-print {
+      background-color: #2980b9;
+    }
+
+    .btn-disabled {
+      background-color: #bdc3c7;
+      cursor: not-allowed;
+    }
+
+    .summary {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 1.2em;
+    }
+
+    .summary strong {
+      color: #e67e22;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> Quản lý Thu ngân - PIZZARITA VIETNAM</h1>
+
+    <h2>Danh sách đơn hàng theo bàn</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Bàn</th>
+          <th>Mã hóa đơn</th>
+          <th>Trạng thái</th>
+          <th>Tổng tiền</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody id="orderTable">
+        <tr>
+  <td>Bàn 1</td>
+  <td>#HD101</td>
+  <td class="status">Đang phục vụ</td>
+  <td class="amount">242000</td>
+  <td>
+    <button class="btn-pay" onclick="handleThanhToan(this)">Thanh toán</button>
+    <a class="btn-print" href="file:///C:/Users/Windows/Downloads/Untitled-3.html" target="_blank">In hóa đơn</a>
+  </td>
+</tr>
+
+<tr>
+  <td>Bàn 2</td>
+  <td>#HD102</td>
+  <td class="status">Đã thanh toán</td>
+  <td class="amount">297000</td>
+  <td>
+    <button class="btn-disabled" disabled>Đã thanh toán</button>
+    <a class="btn-print" href="file:///C:/Users/Windows/Downloads/Untitled-4.html" target="_blank">In lại</a>
+  </td>
+</tr>
+
+<tr>
+  <td>Bàn 3</td>
+  <td>#HD103</td>
+  <td class="status">Đang phục vụ</td>
+  <td class="amount">379500</td>
+  <td>
+    <button class="btn-pay" onclick="handleThanhToan(this)">Thanh toán</button>
+    <a class="btn-print" href="file:///C:/Users/Windows/Downloads/Untitled-5.html" target="_blank">In hóa đơn</a>
+  </td>
+</tr>
+
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <h2> Tổng kết doanh thu trong ngày</h2>
+      <p id="count-paid">Tổng số bàn đã thanh toán: <strong>1</strong></p>
+      <p id="total-paid">Tổng doanh thu: <strong>297,000đ</strong></p>
+    </div>
+  </div>
+
+  <script>
+    function parseCurrency(str) {
+      return parseInt(str.replace(/[^\d]/g, ''));
+    }
+
+    function formatCurrency(num) {
+      return num.toLocaleString('vi-VN') + 'đ';
+    }
+
+    function handleThanhToan(btn) {
+      const row = btn.closest('tr');
+      const statusCell = row.querySelector('.status');
+      const amount = parseInt(row.querySelector('.amount').textContent);
+
+      // Cập nhật trạng thái đơn hàng
+      statusCell.textContent = 'Đã thanh toán';
+
+      // Thay đổi nút
+      btn.textContent = 'Đã thanh toán';
+      btn.className = 'btn-disabled';
+      btn.disabled = true;
+
+      // Cập nhật doanh thu
+      const paidCountEl = document.getElementById('count-paid');
+      const totalPaidEl = document.getElementById('total-paid');
+
+      let paidCount = parseInt(paidCountEl.querySelector('strong').textContent);
+      let total = parseCurrency(totalPaidEl.querySelector('strong').textContent);
+
+      paidCount += 1;
+      total += amount;
+
+      paidCountEl.querySelector('strong').textContent = paidCount;
+      totalPaidEl.querySelector('strong').textContent = formatCurrency(total);
+    }
+
+    function inHoaDon(btn) {
+      const row = btn.closest('tr');
+      const tableName = row.cells[0].textContent;
+      const invoiceId = row.cells[1].textContent;
+      const total = row.querySelector('.amount').textContent;
+
+      alert(`🧾 Hóa đơn: ${invoiceId}\nBàn: ${tableName}\nTổng: ${formatCurrency(parseInt(total))}`);
+    }
+  </script>
+</body>
+</html>
+
